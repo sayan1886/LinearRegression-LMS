@@ -5,12 +5,16 @@ from mpl_toolkits.mplot3d import axes3d
 
 from lms.gd import GradientDescent
 
-def plotChart(iterations, cost):
-    fig, ax = plt.subplots()
-    ax.plot(np.arange(iterations), cost, 'r')
-    ax.set_xlabel('Iterations')
-    ax.set_ylabel('Cost')
-    ax.set_title('Error vs Iterations')
+def plotChart(iterations, cost, accuracy):
+    fig, ax = plt.subplots(1,2)
+    ax[0].plot(np.arange(iterations), cost, 'r')
+    ax[1].plot(np.arange(iterations), accuracy, 'b')
+    ax[0].set_xlabel('Iterations')
+    ax[1].set_xlabel('Iterations')
+    ax[0].set_ylabel('Cost')
+    ax[1].set_ylabel('Accuracy')
+    ax[0].set_title('Cost vs Iterations')
+    ax[1].set_title('Accuracy vs Iterations')
     plt.style.use('fivethirtyeight')
     plt.show()
     
@@ -27,18 +31,18 @@ if __name__ == "__main__":
     # Import data
     data = pd.read_csv('./dataset/house_practice.csv')
     # Extract data into X and y
-    inputs = data[['Size', 'Bedrooms']] 
-    actuals = data['Price']
+    inputs = data[['Size', 'Bedrooms']].to_numpy()
+    actuals = data[['Price']].to_numpy()
     
     num_of_iterations = 1000
-    gd = GradientDescent(learning_rate=0.01, num_of_iterations=num_of_iterations,
+    gd = GradientDescent(learning_rate=0.003, num_of_iterations=num_of_iterations,
                          inputs=inputs, actuals=actuals)
     # gd.predict()
     # Run Gradient Descent
-    cost, theta = gd.gradient_descent()
+    cost, theta, accuracy = gd.gradient_descent()
 
     # Display cost chart
-    plotChart(num_of_iterations, cost)
+    plotChart(num_of_iterations, cost, accuracy)
     
     # plotInputs(inputs[:, 0], inputs[:, 1], gd.predict())
     
